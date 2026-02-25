@@ -1,17 +1,13 @@
-import express from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import { pool } from "../db.js";
 
-const router = express.Router();
-
-// Регистрация нового пользователя
-router.post("/register", async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+export default async function authRoutes(fastify, options) {
+  // Регистрация нового пользователя
+  fastify.post("/register", async (request, reply) => {
+    const { email, password } = request.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email и пароль обязательны" });
+      return reply.code(400).send({ message: "Email и пароль обязательны" });
     }
 
     // Проверка существующего пользователя
@@ -21,7 +17,7 @@ router.post("/register", async (req, res, next) => {
     );
 
     if (existing.rows.length > 0) {
-      return res.status(400).json({ message: "Пользователь уже существует" });
+      return reply.code(400).send({ message: "Пользователь уже существует" });
     }
 
     // Хэширование пароля
@@ -33,19 +29,15 @@ router.post("/register", async (req, res, next) => {
       [email, hash]
     );
 
-    res.status(201).json({ id: rows[0].id, email: rows[0].email });
-  } catch (err) {
-    next(err);
-  }
-});
+    return reply.code(201).send({ id: rows[0].id, email: rows[0].email });
+  });
 
-// Логин пользователя
-router.post("/login", async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+  // Логин пользователя
+  fastify.post("/login", async (request, reply) => {
+    const { email, password } = request.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email и пароль обязательны" });
+      return reply.code(400).send({ message: "Email и пароль обязательны" });
     }
 
     const { rows } = await pool.query(
@@ -54,24 +46,18 @@ router.post("/login", async (req, res, next) => {
     );
 
     if (!rows.length) {
-      return res.status(400).json({ message: "Пользователь не найден" });
+      return reply.code(400).send({ message: "Пользователь не найден" });
     }
 
     const user = rows[0];
     const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) {
-      return res.status(400).json({ message: "Неверный пароль" });
+      return reply.code(400).send({ message: "Неверный пароль" });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
-      expiresIn: "30d"
-    });
+    const token = fastify.jwt.sign({ id: user.id, email: user.email });
 
-    res.json({ token, email: user.email });
-  } catch (err) {
-    next(err);
-  }
-});
-
-export default router;
+    return reply.send({ token, email: user.email });
+  });
+}
