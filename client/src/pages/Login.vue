@@ -1,70 +1,89 @@
 <template>
-  <div class="login-page">
-    <div class="login-card">
-      <h1 class="login-title">🔐 Вход</h1>
-      
-      <form @submit.prevent="login" class="login-form">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input 
-            id="email"
-            v-model="email" 
-            type="email" 
-            placeholder="example@mail.ru" 
-            required 
+  <q-page class="flex flex-center bg-gradient">
+    <q-card class="login-card q-pa-lg">
+      <q-card-section class="text-center">
+        <div class="text-h4 q-mb-md">🔐 Вход</div>
+      </q-card-section>
+
+      <q-card-section>
+        <q-form @submit.prevent="login" class="q-gutter-md">
+          <q-input
+            v-model="email"
+            type="email"
+            label="Email"
+            placeholder="example@mail.ru"
+            outlined
             autocomplete="email"
-          />
-        </div>
-        
-        <div class="form-group">
-          <label for="password">Пароль</label>
-          <input 
-            id="password"
-            v-model="password" 
-            type="password" 
-            placeholder="••••••••" 
-            required 
+            :rules="[val => !!val || 'Введите email']"
+          >
+            <template v-slot:prepend>
+              <q-icon name="email" />
+            </template>
+          </q-input>
+
+          <q-input
+            v-model="password"
+            :type="isPasswordVisible ? 'text' : 'password'"
+            label="Пароль"
+            placeholder="••••••••"
+            outlined
             autocomplete="current-password"
+            :rules="[val => !!val || 'Введите пароль']"
+          >
+            <template v-slot:prepend>
+              <q-icon name="lock" />
+            </template>
+            <template v-slot:append>
+              <q-btn
+                flat
+                dense
+                icon="visibility"
+                @click="isPasswordVisible = !isPasswordVisible"
+              />
+            </template>
+          </q-input>
+
+          <q-btn
+            type="submit"
+            label="Войти"
+            class="full-width"
+            color="primary"
+            :loading="loading"
+            unelevated
           />
-        </div>
-        
-        <button type="submit" :disabled="loading" class="btn-submit">
-          {{ loading ? "Вход..." : "Войти" }}
-        </button>
 
-        <router-link to="/register" class="btn-toggle">
-          Нет аккаунта? Зарегистрироваться
-        </router-link>
-      </form>
-
-      <div v-if="error" class="error-message">{{ error }}</div>
-      
-      <Toast v-model="toastMessage" :type="toastType" />
-    </div>
-  </div>
+          <q-btn
+            label="Нет аккаунта? Зарегистрироваться"
+            class="full-width"
+            color="primary"
+            outline
+            to="/register"
+          />
+        </q-form>
+      </q-card-section>
+    </q-card>
+  </q-page>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useQuasar } from "quasar";
 import { store } from "../store.js";
-import Toast from "../components/Toast.vue";
 
 const router = useRouter();
+const $q = useQuasar();
 
 const email = ref("");
 const password = ref("");
 const loading = ref(false);
-const error = ref("");
-const toastMessage = ref("");
-const toastType = ref("info");
+const isPasswordVisible = ref(false);
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
 async function login() {
   loading.value = true;
-  error.value = "";
-  
+
   try {
     const res = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
@@ -73,22 +92,26 @@ async function login() {
     });
 
     const data = await res.json();
-    
+
     if (!res.ok) {
       throw new Error(data.message || "Ошибка входа");
     }
 
     store.setToken(data.token, { email: data.email });
-    toastMessage.value = "Добро пожаловать!";
-    toastType.value = "success";
     
+    $q.notify({
+      type: "success",
+      message: "Добро пожаловать!"
+    });
+
     setTimeout(() => {
       router.push("/payment");
     }, 500);
   } catch (err) {
-    error.value = err.message;
-    toastMessage.value = err.message;
-    toastType.value = "error";
+    $q.notify({
+      type: "error",
+      message: err.message
+    });
   } finally {
     loading.value = false;
   }
@@ -96,109 +119,14 @@ async function login() {
 </script>
 
 <style scoped>
-.login-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.bg-gradient {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 1rem;
+  min-height: 100vh;
 }
 
 .login-card {
-  background: white;
-  padding: 2.5rem;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 400px;
-}
-
-.login-title {
-  text-align: center;
-  margin: 0 0 2rem 0;
-  color: #333;
-  font-size: 1.8rem;
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group label {
-  font-weight: 500;
-  color: #555;
-  font-size: 0.95rem;
-}
-
-.form-group input {
-  padding: 0.875rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.btn-submit {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 1rem;
-  border-radius: 8px;
-  font-size: 1.05rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.3s;
-}
-
-.btn-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.btn-submit:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.btn-toggle {
-  background: transparent;
-  color: #667eea;
-  border: 2px solid #667eea;
-  padding: 0.75rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  text-align: center;
-}
-
-.btn-toggle:hover {
-  background: #667eea;
-  color: white;
-}
-
-.error-message {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  background: #fee;
-  color: #c00;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 0.9rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 </style>
