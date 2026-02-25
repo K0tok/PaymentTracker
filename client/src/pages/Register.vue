@@ -1,44 +1,56 @@
 <template>
-  <div class="login-page">
-    <div class="login-card">
-      <h1 class="login-title">🔐 Вход</h1>
-      
-      <form @submit.prevent="login" class="login-form">
+  <div class="register-page">
+    <div class="register-card">
+      <h1 class="register-title">📝 Регистрация</h1>
+
+      <form @submit.prevent="register" class="register-form">
         <div class="form-group">
           <label for="email">Email</label>
-          <input 
+          <input
             id="email"
-            v-model="email" 
-            type="email" 
-            placeholder="example@mail.ru" 
-            required 
+            v-model="email"
+            type="email"
+            placeholder="example@mail.ru"
+            required
             autocomplete="email"
           />
         </div>
-        
+
         <div class="form-group">
           <label for="password">Пароль</label>
-          <input 
+          <input
             id="password"
-            v-model="password" 
-            type="password" 
-            placeholder="••••••••" 
-            required 
-            autocomplete="current-password"
+            v-model="password"
+            type="password"
+            placeholder="••••••••"
+            required
+            autocomplete="new-password"
           />
         </div>
-        
+
+        <div class="form-group">
+          <label for="confirmPassword">Подтверждение пароля</label>
+          <input
+            id="confirmPassword"
+            v-model="confirmPassword"
+            type="password"
+            placeholder="••••••••"
+            required
+            autocomplete="new-password"
+          />
+        </div>
+
         <button type="submit" :disabled="loading" class="btn-submit">
-          {{ loading ? "Вход..." : "Войти" }}
+          {{ loading ? "Регистрация..." : "Зарегистрироваться" }}
         </button>
 
-        <router-link to="/register" class="btn-toggle">
-          Нет аккаунта? Зарегистрироваться
+        <router-link to="/login" class="btn-toggle">
+          Уже есть аккаунт? Войти
         </router-link>
       </form>
 
       <div v-if="error" class="error-message">{{ error }}</div>
-      
+
       <Toast v-model="toastMessage" :type="toastType" />
     </div>
   </div>
@@ -47,13 +59,13 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { store } from "../store.js";
 import Toast from "../components/Toast.vue";
 
 const router = useRouter();
 
 const email = ref("");
 const password = ref("");
+const confirmPassword = ref("");
 const loading = ref(false);
 const error = ref("");
 const toastMessage = ref("");
@@ -61,30 +73,37 @@ const toastType = ref("info");
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
-async function login() {
+async function register() {
   loading.value = true;
   error.value = "";
-  
+
+  if (password.value !== confirmPassword.value) {
+    error.value = "Пароли не совпадают";
+    toastMessage.value = "Пароли не совпадают";
+    toastType.value = "error";
+    loading.value = false;
+    return;
+  }
+
   try {
-    const res = await fetch(`${API_URL}/auth/login`, {
+    const res = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: email.value, password: password.value })
     });
 
     const data = await res.json();
-    
+
     if (!res.ok) {
-      throw new Error(data.message || "Ошибка входа");
+      throw new Error(data.message || "Ошибка регистрации");
     }
 
-    store.setToken(data.token, { email: data.email });
-    toastMessage.value = "Добро пожаловать!";
+    toastMessage.value = "Аккаунт создан! Теперь войдите.";
     toastType.value = "success";
-    
+
     setTimeout(() => {
-      router.push("/payment");
-    }, 500);
+      router.push("/login");
+    }, 1500);
   } catch (err) {
     error.value = err.message;
     toastMessage.value = err.message;
@@ -96,7 +115,7 @@ async function login() {
 </script>
 
 <style scoped>
-.login-page {
+.register-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -105,7 +124,7 @@ async function login() {
   padding: 1rem;
 }
 
-.login-card {
+.register-card {
   background: white;
   padding: 2.5rem;
   border-radius: 16px;
@@ -114,14 +133,14 @@ async function login() {
   max-width: 400px;
 }
 
-.login-title {
+.register-title {
   text-align: center;
   margin: 0 0 2rem 0;
   color: #333;
   font-size: 1.8rem;
 }
 
-.login-form {
+.register-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -176,15 +195,16 @@ async function login() {
 }
 
 .btn-toggle {
+  display: block;
+  text-align: center;
   background: transparent;
   color: #667eea;
   border: 2px solid #667eea;
   padding: 0.75rem;
   border-radius: 8px;
   font-size: 0.95rem;
-  cursor: pointer;
+  text-decoration: none;
   transition: all 0.3s;
-  text-align: center;
 }
 
 .btn-toggle:hover {

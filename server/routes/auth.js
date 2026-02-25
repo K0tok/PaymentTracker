@@ -53,6 +53,8 @@ router.post("/login", async (req, res, next) => {
       [email]
     );
 
+    console.log(email, rows);
+    
     if (!rows.length) {
       return res.status(400).json({ message: "Пользователь не найден" });
     }
