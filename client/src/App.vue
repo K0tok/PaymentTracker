@@ -8,30 +8,29 @@
             <span>Учёт оплат</span>
           </div>
         </q-toolbar-title>
-
-        <q-btn flat round dense icon="home" to="/payment" class="q-mr-sm">
-          <q-tooltip>Новая оплата</q-tooltip>
-        </q-btn>
-
-        <q-btn flat round dense icon="history" to="/history">
-          <q-tooltip>История</q-tooltip>
-        </q-btn>
-
-        <q-btn flat round dense icon="logout" @click="logout" class="q-ml-sm">
-          <q-tooltip>Выйти</q-tooltip>
-        </q-btn>
       </q-toolbar>
     </q-header>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer v-if="store.isAuthenticated()" elevated class="bg-primary q-pb-md" :class="$q.platform.is.mobile ? 'mobile-footer' : ''">
+      <q-tabs v-model="activeTab" align="center" class="text-white">
+        <q-route-tab name="payment" to="/payment" icon="home" label="Новая" />
+        <q-route-tab name="history" to="/history" icon="history" label="История" />
+        <q-tab name="logout" @click="logout" icon="logout" label="Выход" />
+      </q-tabs>
+    </q-footer>
   </q-layout>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { store } from "./store.js";
 import router from "./router.js";
+
+const activeTab = ref("payment");
 
 function logout() {
   store.logout();
@@ -44,5 +43,13 @@ function logout() {
   width: 40px;
   height: 40px;
   object-fit: contain;
+}
+
+.mobile-footer :deep(.q-tab) {
+  min-width: 80px;
+}
+
+.mobile-footer :deep(.q-tab__label) {
+  font-size: 12px;
 }
 </style>
