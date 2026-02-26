@@ -11,9 +11,9 @@ export const pool = new Pool({
 
 // Проверка подключения
 pool.on("connect", () => {
-  console.log("✅ Подключение к базе данных установлено");
+  console.log("Подключение к базе данных установлено");
 });
 
 pool.on("error", (err) => {
-  console.error("❌ Ошибка подключения к базе данных:", err);
+  console.error("Ошибка подключения к базе данных:", err);
 });
