@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="q-mb-lg text-h4 text-center text-white">Новая оплата</div>
 
-    <q-card class="q-pa-md">
+    <q-card class="q-pa-md" style="max-width: 500px; margin: 0 auto;">
       <q-form ref="paymentForm" @submit.prevent="submitPayment" class="q-gutter-md">
         <SelectWithAdd
           v-model="form.address_id"
@@ -66,10 +66,11 @@
         <q-btn
           type="submit"
           label="Сохранить оплату"
-          class="full-width"
           color="primary"
           :loading="loading"
           unelevated
+          class="q-mt-md"
+          style="display: block; margin-left: auto; margin-right: auto;"
         />
       </q-form>
     </q-card>

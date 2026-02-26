@@ -15,7 +15,7 @@
       <router-view />
     </q-page-container>
 
-    <q-footer v-if="store.isAuthenticated()" elevated class="bg-primary q-pb-md" :class="$q.platform.is.mobile ? 'mobile-footer' : ''">
+    <q-footer v-if="store.isAuthenticated()" elevated class="bg-primary">
       <q-tabs v-model="activeTab" align="center" class="text-white">
         <q-route-tab name="payment" to="/payment" icon="home" label="Новая" />
         <q-route-tab name="history" to="/history" icon="history" label="История" />
@@ -43,13 +43,5 @@ function logout() {
   width: 40px;
   height: 40px;
   object-fit: contain;
-}
-
-.mobile-footer :deep(.q-tab) {
-  min-width: 80px;
-}
-
-.mobile-footer :deep(.q-tab__label) {
-  font-size: 12px;
 }
 </style>

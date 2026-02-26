@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center bg-gradient">
+  <q-page class="flex flex-center bg-gradient" padding>
     <q-card class="login-card q-pa-lg">
       <q-card-section class="text-center">
         <div class="text-h4 q-mb-md">🔐 Вход</div>
