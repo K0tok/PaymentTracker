@@ -8,9 +8,19 @@
         <div class="row q-col-gutter-md">
           <div class="col-12 col-md-3">
             <q-input
-              v-model="filters.month"
+              v-model="filters.month_from"
               type="month"
-              label="Период"
+              label="Период (с)"
+              outlined
+              dense
+            />
+          </div>
+
+          <div class="col-12 col-md-3">
+            <q-input
+              v-model="filters.month_to"
+              type="month"
+              label="Период (по)"
               outlined
               dense
             />
@@ -41,10 +51,12 @@
               map-options
             />
           </div>
+        </div>
 
-          <div class="col-12 col-md-3">
+        <div class="row q-mt-md q-col-gutter-md">
+          <div class="col-12 col-md-6">
             <q-btn
-              label="Сбросить"
+              label="Сбросить фильтры"
               class="full-width"
               color="grey-5"
               text-color="primary"
@@ -163,7 +175,8 @@ const payments = ref([]);
 const loading = ref(true);
 
 const filters = reactive({
-  month: "",
+  month_from: "",
+  month_to: "",
   address: "",
   payment_type: ""
 });
@@ -178,7 +191,8 @@ const uniqueTypes = computed(() => {
 
 const filteredPayments = computed(() => {
   return payments.value.filter(p => {
-    if (filters.month && p.month_year !== filters.month) return false;
+    if (filters.month_from && p.month_year < filters.month_from) return false;
+    if (filters.month_to && p.month_year > filters.month_to) return false;
     if (filters.address && p.address !== filters.address) return false;
     if (filters.payment_type && p.payment_type !== filters.payment_type) return false;
     return true;
@@ -215,7 +229,8 @@ async function loadPayments() {
 }
 
 function clearFilters() {
-  filters.month = "";
+  filters.month_from = "";
+  filters.month_to = "";
   filters.address = "";
   filters.payment_type = "";
 }
