@@ -13,21 +13,21 @@ export const up = (pgm) => {
     },
     address_id: {
       type: "integer",
-      notNull: true,
+      notNull: false,
       references: "addresses(id)",
-      onDelete: "restrict"
+      onDelete: "set null"
     },
     payment_type_id: {
       type: "integer",
-      notNull: true,
+      notNull: false,
       references: "payment_types(id)",
-      onDelete: "restrict"
+      onDelete: "set null"
     },
     bank_id: {
       type: "integer",
-      notNull: true,
+      notNull: false,
       references: "banks(id)",
-      onDelete: "restrict"
+      onDelete: "set null"
     },
     amount: {
       type: "numeric",

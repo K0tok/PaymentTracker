@@ -3,13 +3,15 @@ import Login from "./pages/Login.vue";
 import Register from "./pages/Register.vue";
 import PaymentForm from "./pages/PaymentForm.vue";
 import History from "./pages/History.vue";
+import Profile from "./pages/Profile.vue";
 
 const routes = [
   { path: "/", redirect: "/login" },
   { path: "/login", component: Login },
   { path: "/register", component: Register },
   { path: "/payment", component: PaymentForm, meta: { requiresAuth: true } },
-  { path: "/history", component: History, meta: { requiresAuth: true } }
+  { path: "/history", component: History, meta: { requiresAuth: true } },
+  { path: "/profile", component: Profile, meta: { requiresAuth: true } }
 ];
 
 const router = createRouter({

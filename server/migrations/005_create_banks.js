@@ -18,6 +18,10 @@ export const up = (pgm) => {
     created_at: {
       type: "timestamptz",
       default: pgm.func("now()")
+    },
+    deleted_at: {
+      type: "timestamptz",
+      default: null
     }
   });
 

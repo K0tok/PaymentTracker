@@ -19,6 +19,7 @@
       <q-tabs v-model="activeTab" align="center" class="text-white">
         <q-route-tab name="payment" to="/payment" icon="home" label="Новая" />
         <q-route-tab name="history" to="/history" icon="history" label="История" />
+        <q-route-tab name="profile" to="/profile" icon="person" label="Профиль" />
         <q-tab name="logout" @click="logout" icon="logout" label="Выход" />
       </q-tabs>
     </q-footer>
