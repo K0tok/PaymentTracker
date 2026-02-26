@@ -3,7 +3,7 @@
     <div class="q-mb-lg text-h4 text-center text-white">Новая оплата</div>
 
     <q-card class="q-pa-md">
-      <q-form @submit.prevent="submitPayment" class="q-gutter-md">
+      <q-form ref="paymentForm" @submit.prevent="submitPayment" class="q-gutter-md">
         <SelectWithAdd
           v-model="form.address_id"
           :options="meta.addresses"
@@ -85,11 +85,13 @@ import SelectWithAdd from "../components/SelectWithAdd.vue";
 const $q = useQuasar();
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
 
+const paymentForm = ref(null);
+
 const form = reactive({
   address_id: null,
   payment_type_id: null,
   bank_id: null,
-  amount: "",
+  amount: null,
   month_year: new Date().toISOString().slice(0, 7)
 });
 
@@ -159,7 +161,7 @@ async function addToMeta(field, value) {
 }
 
 async function submitPayment() {
-  if (!form.address_id || !form.payment_type_id || !form.bank_id || !form.amount || !form.month_year) {
+  if (!form.address_id || !form.payment_type_id || !form.bank_id || form.amount === null || form.amount === '' || !form.month_year) {
     $q.notify({
       type: "warning",
       message: "Все поля обязательны"
@@ -223,11 +225,12 @@ async function submitPayment() {
     form.address_id = null;
     form.payment_type_id = null;
     form.bank_id = null;
-    form.amount = "";
+    form.amount = null;
     form.month_year = new Date().toISOString().slice(0, 7);
     selectedFile.value = null;
 
     await loadMeta();
+    paymentForm.value?.resetValidation();
   } catch (err) {
     $q.notify({
       type: "error",
