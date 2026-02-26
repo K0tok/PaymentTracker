@@ -5,7 +5,7 @@
         <q-toolbar-title>
           <div class="row items-center q-gutter-sm">
             <img src="/logo.png" alt="Логотип" class="q-mr-sm logo" />
-            <span>Учёт оплат</span>
+            <span>Трекер платежей</span>
           </div>
         </q-toolbar-title>
       </q-toolbar>
