@@ -221,7 +221,7 @@ import { store } from "../store.js";
 
 const $q = useQuasar();
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3000"
 
 const payments = ref([]);
 const loading = ref(true);
@@ -327,7 +327,7 @@ function getFullFileUrl(fileUrl) {
   if (fileUrl.startsWith("http://") || fileUrl.startsWith("https://")) {
     return fileUrl;
   }
-  return `${BASE_URL}${fileUrl}`;
+  return `${SERVER_URL}${fileUrl}`;
 }
 
 async function deletePayment(id) {
