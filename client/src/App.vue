@@ -2,9 +2,9 @@
   <q-layout view="hHh lpR fFf">
     <q-header elevated class="header-gradient">
       <q-toolbar>
-        <q-avatar size="40px" class="q-mr-sm logo-avatar">
-          <img src="/logo.png" alt="Логотип" />
-        </q-avatar>
+        <div class="logo-wrapper">
+          <img src="/logo.png" alt="Логотип" class="logo-image" />
+        </div>
         <q-toolbar-title class="text-weight-bold">
           Трекер платежей
         </q-toolbar-title>
@@ -49,8 +49,17 @@ function logout() {
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
 }
 
-.logo-avatar {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-image {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 :deep(.q-tab--active) {

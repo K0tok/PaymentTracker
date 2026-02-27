@@ -3,9 +3,9 @@
     <div class="login-wrapper">
       <q-card class="login-card">
         <q-card-section class="text-center q-pb-none">
-          <q-avatar size="80px" class="q-mb-md logo-avatar">
-            <img src="/logo.png" alt="Логотип" />
-          </q-avatar>
+          <div class="logo-wrapper q-mb-md">
+            <img src="/logo.png" alt="Логотип" class="logo-image" />
+          </div>
           <div class="text-h4 text-weight-bold q-mb-xs">С возвращением!</div>
           <div class="text-caption text-grey-7">Войдите для продолжения</div>
         </q-card-section>
@@ -158,9 +158,20 @@ async function login() {
   backdrop-filter: blur(10px);
 }
 
-.logo-avatar {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(166, 40, 40, 0.3);
+  background: #A62828;
+  padding: 8px;
 }
 
 .btn-gradient {
