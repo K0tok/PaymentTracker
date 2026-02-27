@@ -7,11 +7,12 @@
 
     <q-card class="payment-card">
       <q-card-section class="q-pa-lg">
-        <q-form ref="paymentForm" @submit.prevent="submitPayment" class="q-gutter-md">
+        <q-form ref="paymentForm" @submit.prevent="submitPayment">
           <SelectWithAdd
             v-model="form.address_id"
             :options="meta.addresses"
             label="Адрес"
+            class="q-mb-md"
             @add="addToMeta('addresses', $event)"
           />
 
@@ -19,6 +20,7 @@
             v-model="form.payment_type_id"
             :options="meta.payment_types"
             label="Тип оплаты"
+            class="q-mb-md"
             @add="addToMeta('payment_types', $event)"
           />
 
@@ -26,6 +28,7 @@
             v-model="form.bank_id"
             :options="meta.banks"
             label="Банк"
+            class="q-mb-md"
             @add="addToMeta('banks', $event)"
           />
 
@@ -63,6 +66,7 @@
           <q-file
             v-model="selectedFile"
             label="Прикрепить файл (необязательно)"
+            class="q-mb-md"
             outlined
             rounded
             accept=".pdf,.jpg,.jpeg,.png"
@@ -76,22 +80,20 @@
             </template>
           </q-file>
 
-          <div class="q-mt-md">
-            <q-btn
-              type="submit"
-              label="Сохранить оплату"
-              color="primary"
-              :loading="loading"
-              unelevated
-              rounded
-              class="full-width btn-submit q-py-sm"
-              size="lg"
-            >
-              <template v-slot:loading>
-                <q-spinner-dots size="28px" />
-              </template>
-            </q-btn>
-          </div>
+          <q-btn
+            type="submit"
+            label="Сохранить оплату"
+            color="primary"
+            :loading="loading"
+            unelevated
+            rounded
+            class="full-width btn-submit q-py-sm"
+            size="lg"
+          >
+            <template v-slot:loading>
+              <q-spinner-dots size="28px" />
+            </template>
+          </q-btn>
         </q-form>
       </q-card-section>
     </q-card>
