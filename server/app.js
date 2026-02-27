@@ -1,5 +1,4 @@
 import cors from "@fastify/cors";
-import multipart from "@fastify/multipart";
 import staticPlugin from "@fastify/static";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -12,13 +11,7 @@ export default async function app(fastify, options) {
   await fastify.register(cors, {
     origin: true
   });
-  
-  await fastify.register(multipart, {
-    limits: {
-      fileSize: 10 * 1024 * 1024 // 10MB
-    }
-  });
-  
+
   await fastify.register(staticPlugin, {
     root: path.join(__dirname, "uploads"),
     prefix: "/uploads/"

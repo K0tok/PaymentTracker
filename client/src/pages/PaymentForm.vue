@@ -201,20 +201,33 @@ async function submitPayment() {
     let file_url = null;
 
     if (selectedFile.value) {
-      const formData = new FormData();
-      formData.append("file", selectedFile.value);
+      // Читаем файл как base64
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(selectedFile.value);
+      });
 
       const uploadRes = await fetch(`${API_URL}/payments/upload`, {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           "Authorization": `Bearer ${store.token}`
         },
-        body: formData
+        body: JSON.stringify({
+          file: base64,
+          filename: selectedFile.value.name,
+          type: selectedFile.value.type
+        })
       });
 
       if (uploadRes.ok) {
         const uploadData = await uploadRes.json();
         file_url = uploadData.file_url;
+      } else {
+        const errorData = await uploadRes.json();
+        throw new Error(errorData.message || "Ошибка загрузки файла");
       }
     }
 

@@ -5,7 +5,8 @@ import app from "./app.js";
 dotenv.config();
 
 const fastify = Fastify({
-  logger: true
+  logger: true,
+  bodyLimit: 50 * 1024 * 1024
 });
 
 // JWT плагин

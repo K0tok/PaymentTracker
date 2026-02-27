@@ -1,4 +1,9 @@
 import { pool } from "../db.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default async function paymentRoutes(fastify, options) {
   // Получить все оплаты пользователя
@@ -157,21 +162,26 @@ export default async function paymentRoutes(fastify, options) {
     return reply.send({ message: "Оплата удалена", payment: result.rows[0] });
   });
 
-  // Загрузка файла
+  // Загрузка файла (base64)
   fastify.post("/upload", { onRequest: [fastify.authenticate] }, async (request, reply) => {
-    const data = await request.file();
+    const { file, filename, type } = request.body;
 
-    if (!data) {
+    if (!file) {
       return reply.code(400).send({ message: "Файл не загружен" });
     }
 
-    const fileName = `${Date.now()}-${data.filename}`;
-    const uploadPath = `./uploads/${fileName}`;
+    // Извлекаем base64 данные (удаляем data:image/...;base64,)
+    const base64Data = file.replace(/^data:image\/\w+;base64,|^data:application\/pdf;base64,/, "");
+    const fileBuffer = Buffer.from(base64Data, "base64");
 
-    await data.toFile(uploadPath);
+    const fileName = `${Date.now()}-${filename}`;
+    const uploadPath = path.join(__dirname, "..", "uploads", fileName);
+
+    const fs = await import("fs");
+    fs.writeFileSync(uploadPath, fileBuffer);
 
     const fileUrl = `/uploads/${fileName}`;
 
-    return reply.send({ file_url: fileUrl, file_name: data.filename });
+    return reply.send({ file_url: fileUrl, file_name: filename });
   });
 }
