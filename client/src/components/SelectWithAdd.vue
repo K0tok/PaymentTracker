@@ -48,6 +48,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useQuasar } from "quasar";
+import "../assets/select-with-add-styles.css";
 
 const $q = useQuasar();
 
@@ -117,23 +118,3 @@ function showAddDialog() {
   });
 }
 </script>
-
-<style scoped>
-:deep(.q-field__native),
-:deep(.q-field__input) {
-  font-size: 15px;
-}
-
-:deep(.q-field__label) {
-  font-weight: 500;
-}
-
-:deep(.q-menu) {
-  border-radius: 12px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-:deep(.q-item--selected) {
-  background: rgba(79, 70, 229, 0.08);
-}
-</style>

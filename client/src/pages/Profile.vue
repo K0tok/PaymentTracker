@@ -213,6 +213,7 @@ import { ref, reactive, computed, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { store } from "../store.js";
 import router from "../router.js";
+import "../assets/profile-styles.css";
 
 const $q = useQuasar();
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
@@ -419,65 +420,3 @@ function logout() {
   router.push("/login");
 }
 </script>
-
-<style scoped>
-.profile-page {
-  background: linear-gradient(180deg, #667eea 0%, #f1f5f9 100%);
-  min-height: 100vh;
-  padding-top: 24px;
-}
-
-.page-header {
-  text-align: center;
-}
-
-.user-card {
-  max-width: 600px;
-  margin: 0 auto;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.user-card-header {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  color: white;
-}
-
-.user-avatar {
-  background: rgba(255, 255, 255, 0.2);
-  font-weight: bold;
-}
-
-.dictionary-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.3s;
-  height: 100%;
-}
-
-.dictionary-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.dictionary-header {
-  border-radius: 16px 16px 0 0;
-}
-
-.rounded-item {
-  border-radius: 8px;
-  transition: background 0.2s;
-}
-
-.rounded-item:hover {
-  background: #f5f7fa;
-}
-
-:deep(.q-item__label--caption) {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-</style>

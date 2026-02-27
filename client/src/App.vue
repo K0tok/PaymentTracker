@@ -3,7 +3,7 @@
     <q-header elevated class="header-gradient">
       <q-toolbar>
         <div class="logo-wrapper">
-          <img src="/logo.png" alt="Логотип" class="logo-image" />
+          <img src="/logo.png" alt="Логотип" class="logo-image logo-image--header" />
         </div>
         <q-toolbar-title class="text-weight-bold">
           Трекер платежей
@@ -30,6 +30,8 @@
 import { ref } from "vue";
 import { store } from "./store.js";
 import router from "./router.js";
+import "./assets/logo-styles.css";
+import "./assets/app-styles.css";
 
 const activeTab = ref("payment");
 
@@ -38,32 +40,3 @@ function logout() {
   router.push("/login");
 }
 </script>
-
-<style scoped>
-.header-gradient {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  backdrop-filter: blur(10px);
-}
-
-.footer-gradient {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-}
-
-.logo-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-image {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-:deep(.q-tab--active) {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
-}
-</style>

@@ -4,7 +4,7 @@
       <q-card class="register-card">
         <q-card-section class="text-center q-pb-none">
           <div class="logo-wrapper q-mb-md">
-            <img src="/logo.png" alt="Логотип" class="logo-image" />
+            <img src="/logo.png" alt="Логотип" class="logo-image logo-image--auth" />
           </div>
           <div class="text-h4 text-weight-bold q-mb-xs">Создать аккаунт</div>
           <div class="text-caption text-grey-7">Заполните форму для регистрации</div>
@@ -100,6 +100,8 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
+import "../assets/logo-styles.css";
+import "../assets/register-styles.css";
 
 const router = useRouter();
 const $q = useQuasar();
@@ -161,64 +163,3 @@ async function register() {
   }
 }
 </script>
-
-<style scoped>
-.bg-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-}
-
-.register-wrapper {
-  width: 100%;
-  max-width: 420px;
-  animation: fadeInUp 0.5s ease-out;
-}
-
-.register-card {
-  border-radius: 24px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-}
-
-.logo-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-image {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(166, 40, 40, 0.3);
-  background: #A62828;
-  padding: 8px;
-}
-
-.btn-gradient {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  color: white;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-gradient:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-</style>

@@ -105,6 +105,7 @@ import { ref, reactive, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { store } from "../store.js";
 import SelectWithAdd from "../components/SelectWithAdd.vue";
+import "../assets/payment-form-styles.css";
 
 const $q = useQuasar();
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
@@ -284,49 +285,3 @@ async function submitPayment() {
   }
 }
 </script>
-
-<style scoped>
-.payment-page {
-  background: linear-gradient(180deg, #667eea 0%, #f1f5f9 100%);
-  min-height: 100vh;
-  padding-top: 24px;
-}
-
-.page-header {
-  text-align: center;
-}
-
-.payment-card {
-  max-width: 540px;
-  margin: 0 auto;
-  border-radius: 20px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.98);
-}
-
-.btn-submit {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  color: white;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
-}
-
-.btn-submit:active {
-  transform: translateY(0);
-}
-
-:deep(.q-field__native),
-:deep(.q-field__input) {
-  font-size: 15px;
-}
-
-:deep(.q-field__label) {
-  font-weight: 500;
-}
-</style>

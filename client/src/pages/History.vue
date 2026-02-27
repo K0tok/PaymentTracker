@@ -218,6 +218,7 @@
 import { ref, reactive, computed, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { store } from "../store.js";
+import "../assets/history-styles.css";
 
 const $q = useQuasar();
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
@@ -378,58 +379,3 @@ async function deletePayment(id) {
   });
 }
 </script>
-
-<style scoped>
-.history-page {
-  background: linear-gradient(180deg, #667eea 0%, #f1f5f9 100%);
-  min-height: 100vh;
-  padding-top: 24px;
-}
-
-.page-header {
-  text-align: center;
-}
-
-.filter-card {
-  max-width: 1200px;
-  margin: 0 auto;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.btn-filter {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  color: white;
-  font-weight: 600;
-}
-
-.payment-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.3s;
-  overflow: hidden;
-}
-
-
-.payment-header {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-  color: white;
-}
-
-.payment-icon {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.empty-state {
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 16px;
-  padding: 48px;
-}
-
-:deep(.q-item__label--caption) {
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-</style>

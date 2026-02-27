@@ -1,0 +1,14 @@
+/* Стили для App.vue */
+.header-gradient {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  backdrop-filter: blur(10px);
+}
+
+.footer-gradient {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+
+.q-tab--active {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
