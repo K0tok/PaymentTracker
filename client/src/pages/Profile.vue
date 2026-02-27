@@ -1,83 +1,96 @@
 <template>
-  <q-page padding >
-    <div class="text-h4 text-center text-white q-mb-lg">Профиль</div>
+  <q-page padding class="profile-page">
+    <div class="page-header q-mb-lg">
+      <div class="text-h4 text-weight-bold text-white">Профиль</div>
+      <div class="text-subtitle2 text-white opacity-80">Управление аккаунтом и справочниками</div>
+    </div>
 
-    <q-card class="q-mb-lg" style="max-width: 600px; margin: 0 auto;">
-      <q-card-section class="bg-primary text-white">
+    <!-- Карточка пользователя -->
+    <q-card class="user-card q-mb-lg">
+      <q-card-section class="user-card-header">
         <div class="row items-center q-gutter-md">
-          <q-avatar size="60px" color="white" text-color="primary">
-            <span class="text-h5">{{ userInitial }}</span>
+          <q-avatar size="70px" class="user-avatar">
+            <span class="text-h5 text-weight-bold">{{ userInitial }}</span>
           </q-avatar>
           <div>
-            <div class="text-h6">{{ user.email }}</div>
-            <div class="text-caption opacity-80">ID: {{ user.id }}</div>
+            <div class="text-h6 text-weight-bold">{{ user.email }}</div>
+            <div class="text-caption opacity-80">Пользователь системы</div>
           </div>
         </div>
       </q-card-section>
 
-      <q-card-section>
+      <q-card-section class="q-pt-md">
         <q-list>
           <q-item>
             <q-item-section avatar>
-              <q-icon name="person" color="primary" />
+              <q-avatar icon="email" color="primary" text-color="white" size="40px" />
             </q-item-section>
             <q-item-section>
-              <q-item-label caption>Email</q-item-label>
-              <q-item-label>{{ user.email }}</q-item-label>
+              <q-item-label caption class="text-grey-6">Email</q-item-label>
+              <q-item-label class="text-weight-medium">{{ user.email }}</q-item-label>
             </q-item-section>
           </q-item>
 
           <q-item>
             <q-item-section avatar>
-              <q-icon name="badge" color="primary" />
+              <q-avatar icon="badge" color="secondary" text-color="white" size="40px" />
             </q-item-section>
             <q-item-section>
-              <q-item-label caption>ID пользователя</q-item-label>
-              <q-item-label>{{ user.id }}</q-item-label>
+              <q-item-label caption class="text-grey-6">ID пользователя</q-item-label>
+              <q-item-label class="text-weight-medium">{{ user.id }}</q-item-label>
             </q-item-section>
           </q-item>
 
           <q-item>
             <q-item-section avatar>
-              <q-icon name="event" color="primary" />
+              <q-avatar icon="event" color="accent" text-color="white" size="40px" />
             </q-item-section>
             <q-item-section>
-              <q-item-label caption>Дата регистрации</q-item-label>
-              <q-item-label>{{ formatDate(user.created_at) }}</q-item-label>
+              <q-item-label caption class="text-grey-6">Дата регистрации</q-item-label>
+              <q-item-label class="text-weight-medium">{{ formatDate(user.created_at) }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
       </q-card-section>
 
-      <q-card-actions align="center">
+      <q-card-actions align="center" class="q-pa-md">
         <q-btn
           label="Выйти"
-          color="red"
+          color="negative"
           icon="logout"
           @click="logout"
           unelevated
-          class="q-mr-sm"
+          rounded
+          class="q-px-xl"
         />
       </q-card-actions>
     </q-card>
 
     <!-- Справочники -->
+    <div class="text-h6 text-weight-bold text-white q-mb-md">Справочники</div>
+    
     <div class="row q-col-gutter-md">
       <!-- Адреса -->
       <div class="col-12 col-md-4">
-        <q-card style="height: 100%;">
-          <q-card-section class="bg-secondary text-white">
+        <q-card class="dictionary-card">
+          <q-card-section class="dictionary-header bg-primary">
             <div class="row justify-between items-center">
-              <div class="text-h6">Адреса</div>
+              <div class="row items-center q-gutter-sm">
+                <q-avatar icon="location_on" size="32px" color="white" text-color="primary" />
+                <div class="text-h6 text-weight-bold">Адреса</div>
+              </div>
               <q-btn flat dense round icon="add" color="white" @click="showAddDialog('addresses')" />
             </div>
           </q-card-section>
 
-          <q-card-section>
-            <q-list dense>
-              <q-item v-for="item in meta.addresses" :key="item.id">
+          <q-card-section class="q-pa-md">
+            <q-list>
+              <q-item v-for="item in meta.addresses" :key="item.id" class="q-mb-xs rounded-item">
+                <q-item-section avatar>
+                  <q-avatar icon="location_on" color="grey-3" text-color="grey-7" size="36px" />
+                </q-item-section>
                 <q-item-section>
-                  <q-item-label>{{ item.value }}</q-item-label>
+                  <q-item-label class="text-weight-medium">{{ item.value }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-btn
@@ -85,15 +98,16 @@
                     dense
                     round
                     icon="delete"
-                    color="red"
+                    color="negative"
                     @click="deleteMetaItem('addresses', item.id)"
                   />
                 </q-item-section>
               </q-item>
 
-              <q-item v-if="!meta.addresses.length">
-                <q-item-section class="text-grey-7 text-center">
-                  Нет сохранённых адресов
+              <q-item v-if="!meta.addresses.length" class="text-center q-py-md">
+                <q-item-section>
+                  <q-icon name="location_off" size="32px" color="grey-5" />
+                  <q-item-label class="text-grey-6 q-mt-sm">Нет сохранённых адресов</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -103,19 +117,25 @@
 
       <!-- Типы оплаты -->
       <div class="col-12 col-md-4">
-        <q-card style="height: 100%;">
-          <q-card-section class="bg-secondary text-white">
+        <q-card class="dictionary-card">
+          <q-card-section class="dictionary-header bg-secondary">
             <div class="row justify-between items-center">
-              <div class="text-h6">Типы оплаты</div>
+              <div class="row items-center q-gutter-sm">
+                <q-avatar icon="payments" size="32px" color="white" text-color="secondary" />
+                <div class="text-h6 text-weight-bold">Типы оплаты</div>
+              </div>
               <q-btn flat dense round icon="add" color="white" @click="showAddDialog('payment_types')" />
             </div>
           </q-card-section>
 
-          <q-card-section>
-            <q-list dense>
-              <q-item v-for="item in meta.payment_types" :key="item.id">
+          <q-card-section class="q-pa-md">
+            <q-list>
+              <q-item v-for="item in meta.payment_types" :key="item.id" class="q-mb-xs rounded-item">
+                <q-item-section avatar>
+                  <q-avatar icon="payments" color="grey-3" text-color="grey-7" size="36px" />
+                </q-item-section>
                 <q-item-section>
-                  <q-item-label>{{ item.value }}</q-item-label>
+                  <q-item-label class="text-weight-medium">{{ item.value }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-btn
@@ -123,15 +143,16 @@
                     dense
                     round
                     icon="delete"
-                    color="red"
+                    color="negative"
                     @click="deleteMetaItem('payment_types', item.id)"
                   />
                 </q-item-section>
               </q-item>
 
-              <q-item v-if="!meta.payment_types.length">
-                <q-item-section class="text-grey-7 text-center">
-                  Нет сохранённых типов
+              <q-item v-if="!meta.payment_types.length" class="text-center q-py-md">
+                <q-item-section>
+                  <q-icon name="payments" size="32px" color="grey-5" />
+                  <q-item-label class="text-grey-6 q-mt-sm">Нет сохранённых типов</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -141,19 +162,25 @@
 
       <!-- Банки -->
       <div class="col-12 col-md-4">
-        <q-card style="height: 100%;">
-          <q-card-section class="bg-secondary text-white">
+        <q-card class="dictionary-card">
+          <q-card-section class="dictionary-header bg-accent">
             <div class="row justify-between items-center">
-              <div class="text-h6">Банки</div>
+              <div class="row items-center q-gutter-sm">
+                <q-avatar icon="account_balance" size="32px" color="white" text-color="accent" />
+                <div class="text-h6 text-weight-bold">Банки</div>
+              </div>
               <q-btn flat dense round icon="add" color="white" @click="showAddDialog('banks')" />
             </div>
           </q-card-section>
 
-          <q-card-section>
-            <q-list dense>
-              <q-item v-for="item in meta.banks" :key="item.id">
+          <q-card-section class="q-pa-md">
+            <q-list>
+              <q-item v-for="item in meta.banks" :key="item.id" class="q-mb-xs rounded-item">
+                <q-item-section avatar>
+                  <q-avatar icon="account_balance" color="grey-3" text-color="grey-7" size="36px" />
+                </q-item-section>
                 <q-item-section>
-                  <q-item-label>{{ item.value }}</q-item-label>
+                  <q-item-label class="text-weight-medium">{{ item.value }}</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-btn
@@ -161,15 +188,16 @@
                     dense
                     round
                     icon="delete"
-                    color="red"
+                    color="negative"
                     @click="deleteMetaItem('banks', item.id)"
                   />
                 </q-item-section>
               </q-item>
 
-              <q-item v-if="!meta.banks.length">
-                <q-item-section class="text-grey-7 text-center">
-                  Нет сохранённых банков
+              <q-item v-if="!meta.banks.length" class="text-center q-py-md">
+                <q-item-section>
+                  <q-icon name="account_balance_wallet" size="32px" color="grey-5" />
+                  <q-item-label class="text-grey-6 q-mt-sm">Нет сохранённых банков</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
@@ -217,7 +245,7 @@ async function loadUserData() {
     const payload = JSON.parse(atob(token.split(".")[1]));
     user.id = payload.id;
     user.email = payload.email;
-    user.created_at = new Date().toISOString(); // Можно получить с сервера
+    user.created_at = new Date().toISOString();
   } catch (err) {
     console.error("Ошибка декодирования токена:", err);
   }
@@ -243,8 +271,6 @@ async function loadMeta() {
 }
 
 function showAddDialog(field) {
-  let newValue = "";
-
   const titles = {
     addresses: "Добавить адрес",
     payment_types: "Добавить тип оплаты",
@@ -261,13 +287,23 @@ function showAddDialog(field) {
     title: titles[field],
     message: "",
     prompt: {
-      model: newValue,
+      model: "",
       type: "text",
       label: labels[field],
       outlined: true
     },
     cancel: true,
-    persistent: true
+    persistent: true,
+    ok: {
+      label: "Добавить",
+      color: "primary",
+      unelevated: true
+    },
+    cancel: {
+      label: "Отмена",
+      color: "grey-6",
+      outline: true
+    }
   }).onOk(async (value) => {
     if (value && value.trim()) {
       await addMetaItem(field, value.trim());
@@ -288,25 +324,30 @@ async function addMetaItem(field, value) {
 
     if (res.ok || res.status === 200) {
       const newData = await res.json();
-      // Проверяем, есть ли уже такая запись в списке
       if (!meta[field].find(item => item.id === newData.id)) {
         meta[field].push({ id: newData.id, value: newData.value });
       }
       $q.notify({
-        type: "success",
-        message: newData.id ? "Добавлено" : "Уже существует"
+        type: "positive",
+        message: "Добавлено",
+        position: "top",
+        actions: [{ icon: 'close', color: 'white' }]
       });
     } else {
       const data = await res.json();
       $q.notify({
         type: "warning",
-        message: data.message || "Не удалось добавить"
+        message: data.message || "Не удалось добавить",
+        position: "top",
+        actions: [{ icon: 'close', color: 'white' }]
       });
     }
   } catch (err) {
     $q.notify({
-      type: "error",
-      message: err.message
+      type: "negative",
+      message: err.message,
+      position: "top",
+      actions: [{ icon: 'close', color: 'white' }]
     });
   }
 }
@@ -316,7 +357,17 @@ async function deleteMetaItem(field, id) {
     title: "Подтверждение",
     message: "Удалить эту запись?",
     cancel: true,
-    persistent: true
+    persistent: true,
+    ok: {
+      label: "Удалить",
+      color: "negative",
+      unelevated: true
+    },
+    cancel: {
+      label: "Отмена",
+      color: "grey-6",
+      outline: true
+    }
   }).onOk(async () => {
     try {
       const res = await fetch(`${API_URL}/user-meta/${field}/${id}`, {
@@ -331,19 +382,25 @@ async function deleteMetaItem(field, id) {
       if (res.ok) {
         meta[field] = meta[field].filter(item => item.id !== id);
         $q.notify({
-          type: "success",
-          message: "Удалено"
+          type: "positive",
+          message: "Удалено",
+          position: "top",
+          actions: [{ icon: 'close', color: 'white' }]
         });
       } else {
         $q.notify({
           type: "warning",
-          message: data.message || "Ошибка удаления"
+          message: data.message || "Ошибка удаления",
+          position: "top",
+          actions: [{ icon: 'close', color: 'white' }]
         });
       }
     } catch (err) {
       $q.notify({
-        type: "error",
-        message: err.message
+        type: "negative",
+        message: err.message,
+        position: "top",
+        actions: [{ icon: 'close', color: 'white' }]
       });
     }
   });
@@ -362,3 +419,65 @@ function logout() {
   router.push("/login");
 }
 </script>
+
+<style scoped>
+.profile-page {
+  background: linear-gradient(180deg, #667eea 0%, #f1f5f9 100%);
+  min-height: 100vh;
+  padding-top: 24px;
+}
+
+.page-header {
+  text-align: center;
+}
+
+.user-card {
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.user-card-header {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+}
+
+.user-avatar {
+  background: rgba(255, 255, 255, 0.2);
+  font-weight: bold;
+}
+
+.dictionary-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.3s;
+  height: 100%;
+}
+
+.dictionary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.dictionary-header {
+  border-radius: 16px 16px 0 0;
+}
+
+.rounded-item {
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.rounded-item:hover {
+  background: #f5f7fa;
+}
+
+:deep(.q-item__label--caption) {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+</style>

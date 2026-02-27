@@ -1,78 +1,99 @@
 <template>
-  <q-page padding>
-    <div class="q-mb-lg text-h4 text-center text-white">Новая оплата</div>
+  <q-page padding class="payment-page">
+    <div class="page-header q-mb-lg">
+      <div class="text-h4 text-weight-bold text-white">Новая оплата</div>
+      <div class="text-subtitle2 text-white opacity-80">Заполните данные о платеже</div>
+    </div>
 
-    <q-card class="q-pa-md" style="max-width: 500px; margin: 0 auto;">
-      <q-form ref="paymentForm" @submit.prevent="submitPayment" class="q-gutter-md">
-        <SelectWithAdd
-          v-model="form.address_id"
-          :options="meta.addresses"
-          label="Адрес"
-          @add="addToMeta('addresses', $event)"
-        />
+    <q-card class="payment-card">
+      <q-card-section class="q-pa-lg">
+        <q-form ref="paymentForm" @submit.prevent="submitPayment" class="q-gutter-md">
+          <SelectWithAdd
+            v-model="form.address_id"
+            :options="meta.addresses"
+            label="Адрес"
+            @add="addToMeta('addresses', $event)"
+          />
 
-        <SelectWithAdd
-          v-model="form.payment_type_id"
-          :options="meta.payment_types"
-          label="Тип оплаты"
-          @add="addToMeta('payment_types', $event)"
-        />
+          <SelectWithAdd
+            v-model="form.payment_type_id"
+            :options="meta.payment_types"
+            label="Тип оплаты"
+            @add="addToMeta('payment_types', $event)"
+          />
 
-        <SelectWithAdd
-          v-model="form.bank_id"
-          :options="meta.banks"
-          label="Банк"
-          @add="addToMeta('banks', $event)"
-        />
+          <SelectWithAdd
+            v-model="form.bank_id"
+            :options="meta.banks"
+            label="Банк"
+            @add="addToMeta('banks', $event)"
+          />
 
-        <q-input
-          v-model.number="form.amount"
-          type="number"
-          label="Сумма"
-          placeholder="0.00"
-          outlined
-          step="0.01"
-          min="0"
-          :rules="[val => !!val || 'Введите сумму']"
-        >
-          <template v-slot:prepend>
-            <q-icon name="attach_money" />
-          </template>
-        </q-input>
+          <q-input
+            v-model.number="form.amount"
+            type="number"
+            label="Сумма"
+            placeholder="0.00 ₽"
+            outlined
+            rounded
+            step="0.01"
+            min="0"
+            :rules="[val => !!val || 'Введите сумму']"
+            color="primary"
+          >
+            <template v-slot:prepend>
+              <q-icon name="attach_money" color="primary" />
+            </template>
+          </q-input>
 
-        <q-input
-          v-model="form.month_year"
-          type="month"
-          label="Период оплаты"
-          outlined
-          :rules="[val => !!val || 'Выберите период']"
-        >
-          <template v-slot:prepend>
-            <q-icon name="event" />
-          </template>
-        </q-input>
+          <q-input
+            v-model="form.month_year"
+            type="month"
+            label="Период оплаты"
+            outlined
+            rounded
+            :rules="[val => !!val || 'Выберите период']"
+            color="primary"
+          >
+            <template v-slot:prepend>
+              <q-icon name="event_month" color="primary" />
+            </template>
+          </q-input>
 
-        <q-file
-          v-model="selectedFile"
-          label="Прикрепить файл (необязательно)"
-          outlined
-          accept=".pdf,.jpg,.jpeg,.png"
-        >
-          <template v-slot:prepend>
-            <q-icon name="attach_file" />
-          </template>
-        </q-file>
+          <q-file
+            v-model="selectedFile"
+            label="Прикрепить файл (необязательно)"
+            outlined
+            rounded
+            accept=".pdf,.jpg,.jpeg,.png"
+            color="primary"
+          >
+            <template v-slot:prepend>
+              <q-icon name="attach_file" color="primary" />
+            </template>
+            <template v-slot:append>
+              <q-icon name="folder_open" color="grey-7" />
+            </template>
+          </q-file>
 
-        <q-btn
-          type="submit"
-          label="Сохранить оплату"
-          color="primary"
-          :loading="loading"
-          unelevated
-          class="q-mt-md"
-          style="display: block; margin-left: auto; margin-right: auto;"
-        />
-      </q-form>
+          <div class="q-mt-md">
+            <q-btn
+              type="submit"
+              label="Сохранить оплату"
+              color="primary"
+              :loading="loading"
+              unelevated
+              rounded
+              class="full-width btn-submit q-py-sm"
+              size="lg"
+            >
+              <template v-slot:loading>
+                <q-spinner-dots size="28px" />
+              </template>
+            </q-btn>
+          </div>
+        </q-form>
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
@@ -165,7 +186,9 @@ async function submitPayment() {
   if (!form.address_id || !form.payment_type_id || !form.bank_id || form.amount === null || form.amount === '' || !form.month_year) {
     $q.notify({
       type: "warning",
-      message: "Все поля обязательны"
+      message: "Все поля обязательны",
+      position: "top",
+      actions: [{ icon: 'close', color: 'white' }]
     });
     return;
   }
@@ -219,8 +242,10 @@ async function submitPayment() {
     }
 
     $q.notify({
-      type: "success",
-      message: "Оплата успешно сохранена!"
+      type: "positive",
+      message: "Оплата успешно сохранена!",
+      position: "top",
+      actions: [{ icon: 'close', color: 'white' }]
     });
 
     form.address_id = null;
@@ -234,11 +259,59 @@ async function submitPayment() {
     paymentForm.value?.resetValidation();
   } catch (err) {
     $q.notify({
-      type: "error",
-      message: err.message
+      type: "negative",
+      message: err.message,
+      position: "top",
+      actions: [{ icon: 'close', color: 'white' }]
     });
   } finally {
     loading.value = false;
   }
 }
 </script>
+
+<style scoped>
+.payment-page {
+  background: linear-gradient(180deg, #667eea 0%, #f1f5f9 100%);
+  min-height: 100vh;
+  padding-top: 24px;
+}
+
+.page-header {
+  text-align: center;
+}
+
+.payment-card {
+  max-width: 540px;
+  margin: 0 auto;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+:deep(.q-field__native),
+:deep(.q-field__input) {
+  font-size: 15px;
+}
+
+:deep(.q-field__label) {
+  font-weight: 500;
+}
+</style>
