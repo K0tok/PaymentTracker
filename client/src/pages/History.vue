@@ -120,7 +120,7 @@
       <div class="text-caption text-grey-5">Добавьте первую оплату в разделе "Новая"</div>
     </div>
 
-    <div v-else class="row q-col-gutter-md">
+    <div v-else class="row q-col-gutter-md q-pt-lg">
       <div
         v-for="payment in filteredPayments"
         :key="payment.id"
@@ -410,10 +410,6 @@ async function deletePayment(id) {
   overflow: hidden;
 }
 
-.payment-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-}
 
 .payment-header {
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
