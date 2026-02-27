@@ -1,13 +1,16 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header v-if="store.isAuthenticated()" elevated class="bg-primary">
+    <q-header elevated class="header-gradient">
       <q-toolbar>
-        <q-toolbar-title>
-          <div class="row items-center q-gutter-sm">
-            <img src="/logo.png" alt="Логотип" class="q-mr-sm logo" />
-            <span>Трекер платежей</span>
-          </div>
+        <q-avatar size="40px" class="q-mr-sm logo-avatar">
+          <img src="/logo.png" alt="Логотип" />
+        </q-avatar>
+        <q-toolbar-title class="text-weight-bold">
+          Трекер платежей
         </q-toolbar-title>
+        <q-btn flat round dense icon="notifications" class="text-white">
+          <q-badge color="red" floating>{{ notificationsCount }}</q-badge>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -15,11 +18,11 @@
       <router-view />
     </q-page-container>
 
-    <q-footer v-if="store.isAuthenticated()" elevated class="bg-primary">
+    <q-footer v-if="store.isAuthenticated()" elevated class="footer-gradient">
       <q-tabs v-model="activeTab" align="center" class="text-white">
-        <q-route-tab name="payment" to="/payment" icon="home" label="Новая" />
-        <q-route-tab name="history" to="/history" icon="history" label="История" />
-        <q-route-tab name="profile" to="/profile" icon="person" label="Профиль" />
+        <q-route-tab name="payment" to="/payment" icon="payments" label="Новая" />
+        <q-route-tab name="history" to="/history" icon="history_edu" label="История" />
+        <q-route-tab name="profile" to="/profile" icon="person_outline" label="Профиль" />
         <q-tab name="logout" @click="logout" icon="logout" label="Выход" />
       </q-tabs>
     </q-footer>
@@ -32,6 +35,7 @@ import { store } from "./store.js";
 import router from "./router.js";
 
 const activeTab = ref("payment");
+const notificationsCount = ref(0);
 
 function logout() {
   store.logout();
@@ -40,9 +44,21 @@ function logout() {
 </script>
 
 <style scoped>
-.logo {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
+.header-gradient {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  backdrop-filter: blur(10px);
+}
+
+.footer-gradient {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+
+.logo-avatar {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+:deep(.q-tab--active) {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
 }
 </style>

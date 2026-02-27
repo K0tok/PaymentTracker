@@ -1,11 +1,14 @@
 <template>
-  <q-page padding>
-    <div class="q-mb-lg text-h4 text-center text-white">История оплат</div>
+  <q-page padding class="history-page">
+    <div class="page-header q-mb-lg">
+      <div class="text-h4 text-weight-bold text-white">История оплат</div>
+      <div class="text-subtitle2 text-white opacity-80">Все ваши платежи в одном месте</div>
+    </div>
 
     <!-- Фильтры -->
-    <q-card class="q-mb-lg">
-      <q-card-section>
-        <div class="row q-col-gutter-md">
+    <q-card class="filter-card q-mb-lg">
+      <q-card-section class="q-pa-md">
+        <div class="row q-col-gutter-sm">
           <div class="col-12 col-md-3">
             <q-input
               v-model="filters.month_from"
@@ -13,7 +16,13 @@
               label="Период (с)"
               outlined
               dense
-            />
+              rounded
+              color="primary"
+            >
+              <template v-slot:prepend>
+                <q-icon name="event_month" color="primary" size="18px" />
+              </template>
+            </q-input>
           </div>
 
           <div class="col-12 col-md-3">
@@ -23,7 +32,13 @@
               label="Период (по)"
               outlined
               dense
-            />
+              rounded
+              color="primary"
+            >
+              <template v-slot:prepend>
+                <q-icon name="event_month" color="primary" size="18px" />
+              </template>
+            </q-input>
           </div>
 
           <div class="col-12 col-md-3">
@@ -33,10 +48,16 @@
               label="Адрес"
               outlined
               dense
+              rounded
               clearable
               emit-value
               map-options
-            />
+              color="primary"
+            >
+              <template v-slot:prepend>
+                <q-icon name="location_on" color="primary" size="18px" />
+              </template>
+            </q-select>
           </div>
 
           <div class="col-12 col-md-3">
@@ -46,22 +67,41 @@
               label="Тип оплаты"
               outlined
               dense
+              rounded
               clearable
               emit-value
               map-options
-            />
+              color="primary"
+            >
+              <template v-slot:prepend>
+                <q-icon name="payments" color="primary" size="18px" />
+              </template>
+            </q-select>
           </div>
         </div>
 
-        <div class="row q-mt-md q-col-gutter-md">
+        <div class="row q-mt-sm q-col-gutter-sm">
           <div class="col-12 col-md-6">
             <q-btn
               label="Сбросить фильтры"
               class="full-width"
-              color="grey-5"
-              text-color="primary"
+              color="grey-6"
+              text-color="white"
               @click="clearFilters"
               unelevated
+              rounded
+              icon="filter_alt_off"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <q-btn
+              label="Применить фильтры"
+              class="full-width btn-filter"
+              color="primary"
+              @click="applyFilters"
+              unelevated
+              rounded
+              icon="filter_list"
             />
           </div>
         </div>
@@ -71,12 +111,13 @@
     <!-- Список оплат -->
     <div v-if="loading" class="text-center q-pa-xl">
       <q-spinner color="primary" size="3em" />
-      <div class="q-mt-md">Загрузка...</div>
+      <div class="q-mt-md text-grey-7">Загрузка данных...</div>
     </div>
 
-    <div v-else-if="filteredPayments.length === 0" class="text-center q-pa-xl">
-      <q-icon name="inbox" size="3em" color="grey-6" />
-      <div class="q-mt-md text-grey-7">📭 Нет оплат для отображения</div>
+    <div v-else-if="filteredPayments.length === 0" class="text-center q-pa-xl empty-state">
+      <q-icon name="inbox" size="4em" color="grey-6" />
+      <div class="q-mt-md text-h6 text-grey-7">Нет оплат для отображения</div>
+      <div class="text-caption text-grey-5">Добавьте первую оплату в разделе "Новая"</div>
     </div>
 
     <div v-else class="row q-col-gutter-md">
@@ -86,72 +127,83 @@
         class="col-12 col-md-6 col-lg-4"
       >
         <q-card class="payment-card">
-          <q-card-section class="bg-primary text-white">
+          <q-card-section class="payment-header">
             <div class="row justify-between items-center">
-              <div class="text-h6">{{ payment.payment_type }}</div>
-              <div class="text-h6 text-weight-bold">{{ formatAmount(payment.amount) }}</div>
+              <div>
+                <div class="text-caption opacity-80">{{ payment.payment_type }}</div>
+                <div class="text-h6 text-weight-bold">{{ formatAmount(payment.amount) }}</div>
+              </div>
+              <q-avatar size="40px" class="payment-icon">
+                <q-icon name="payments" size="20px" />
+              </q-avatar>
             </div>
           </q-card-section>
 
-          <q-card-section>
-            <q-list dense>
-              <q-item>
+          <q-card-section class="q-pt-md">
+            <q-list>
+              <q-item class="q-py-xs">
                 <q-item-section avatar>
-                  <q-icon name="location_on" color="primary" />
+                  <q-icon name="location_on" size="18px" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label caption>Адрес</q-item-label>
-                  <q-item-label>{{ payment.address }}</q-item-label>
+                  <q-item-label caption class="text-grey-6">Адрес</q-item-label>
+                  <q-item-label class="text-weight-medium">{{ payment.address }}</q-item-label>
                 </q-item-section>
               </q-item>
 
-              <q-item>
+              <q-item class="q-py-xs">
                 <q-item-section avatar>
-                  <q-icon name="account_balance" color="primary" />
+                  <q-icon name="account_balance" size="18px" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label caption>Банк</q-item-label>
-                  <q-item-label>{{ payment.bank }}</q-item-label>
+                  <q-item-label caption class="text-grey-6">Банк</q-item-label>
+                  <q-item-label class="text-weight-medium">{{ payment.bank }}</q-item-label>
                 </q-item-section>
               </q-item>
 
-              <q-item>
+              <q-item class="q-py-xs">
                 <q-item-section avatar>
-                  <q-icon name="event_month" color="primary" />
+                  <q-icon name="event_month" size="18px" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label caption>Период</q-item-label>
-                  <q-item-label>{{ formatMonth(payment.month_year) }}</q-item-label>
+                  <q-item-label caption class="text-grey-6">Период</q-item-label>
+                  <q-item-label class="text-weight-medium">{{ formatMonth(payment.month_year) }}</q-item-label>
                 </q-item-section>
               </q-item>
 
-              <q-item>
+              <q-item class="q-py-xs">
                 <q-item-section avatar>
-                  <q-icon name="schedule" color="primary" />
+                  <q-icon name="schedule" size="18px" />
                 </q-item-section>
                 <q-item-section>
-                  <q-item-label caption>Дата</q-item-label>
-                  <q-item-label>{{ formatDate(payment.created_at) }}</q-item-label>
+                  <q-item-label caption class="text-grey-6">Дата</q-item-label>
+                  <q-item-label class="text-weight-medium">{{ formatDate(payment.created_at) }}</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
           </q-card-section>
 
-          <q-card-actions align="right">
+          <q-separator />
+
+          <q-card-actions align="right" class="q-pa-sm">
             <q-btn
               v-if="payment.file_url"
               label="Файл"
-              color="blue-6"
+              color="primary"
               outline
+              rounded
+              size="sm"
               icon="file_present"
               :href="getFullFileUrl(payment.file_url)"
               target="_blank"
+              class="q-mr-sm"
             />
-            <q-space />
             <q-btn
               label="Удалить"
-              color="red-6"
+              color="negative"
               flat
+              rounded
+              size="sm"
               icon="delete"
               @click="deletePayment(payment.id)"
             />
@@ -220,8 +272,10 @@ async function loadPayments() {
     payments.value = await res.json();
   } catch (err) {
     $q.notify({
-      type: "error",
-      message: err.message
+      type: "negative",
+      message: err.message,
+      position: "top",
+      actions: [{ icon: 'close', color: 'white' }]
     });
   } finally {
     loading.value = false;
@@ -233,6 +287,16 @@ function clearFilters() {
   filters.month_to = "";
   filters.address = "";
   filters.payment_type = "";
+}
+
+function applyFilters() {
+  // Фильтры применяются реактивно через computed
+  $q.notify({
+    type: "info",
+    message: "Фильтры применены",
+    position: "top",
+    actions: [{ icon: 'close', color: 'white' }]
+  });
 }
 
 function formatMonth(monthYear) {
@@ -271,7 +335,17 @@ async function deletePayment(id) {
     title: "Подтверждение",
     message: "Вы уверены, что хотите удалить эту запись?",
     cancel: true,
-    persistent: true
+    persistent: true,
+    ok: {
+      label: "Удалить",
+      color: "negative",
+      unelevated: true
+    },
+    cancel: {
+      label: "Отмена",
+      color: "grey-6",
+      outline: true
+    }
   }).onOk(async () => {
     try {
       const res = await fetch(`${API_URL}/payments/${id}`, {
@@ -288,13 +362,17 @@ async function deletePayment(id) {
 
       payments.value = payments.value.filter(p => p.id !== id);
       $q.notify({
-        type: "success",
-        message: "Запись удалена"
+        type: "positive",
+        message: "Запись удалена",
+        position: "top",
+        actions: [{ icon: 'close', color: 'white' }]
       });
     } catch (err) {
       $q.notify({
-        type: "error",
-        message: err.message
+        type: "negative",
+        message: err.message,
+        position: "top",
+        actions: [{ icon: 'close', color: 'white' }]
       });
     }
   });
@@ -302,12 +380,60 @@ async function deletePayment(id) {
 </script>
 
 <style scoped>
+.history-page {
+  background: linear-gradient(180deg, #667eea 0%, #f1f5f9 100%);
+  min-height: 100vh;
+  padding-top: 24px;
+}
+
+.page-header {
+  text-align: center;
+}
+
+.filter-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.btn-filter {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  font-weight: 600;
+}
+
 .payment-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s, box-shadow 0.3s;
+  overflow: hidden;
 }
 
 .payment-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.payment-header {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+}
+
+.payment-icon {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.empty-state {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  padding: 48px;
+}
+
+:deep(.q-item__label--caption) {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 </style>
