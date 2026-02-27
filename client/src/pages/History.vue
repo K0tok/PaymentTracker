@@ -109,12 +109,12 @@
     </q-card>
 
     <!-- Список оплат -->
-    <div v-if="loading" class="text-center q-pa-xl">
+    <div v-if="loading" class="text-center q-pa-xl q-pt-lg">
       <q-spinner color="primary" size="3em" />
       <div class="q-mt-md text-grey-7">Загрузка данных...</div>
     </div>
 
-    <div v-else-if="filteredPayments.length === 0" class="text-center q-pa-xl empty-state">
+    <div v-else-if="filteredPayments.length === 0" class="text-center q-pa-xl empty-state q-pt-lg">
       <q-icon name="inbox" size="4em" color="grey-6" />
       <div class="q-mt-md text-h6 text-grey-7">Нет оплат для отображения</div>
       <div class="text-caption text-grey-5">Добавьте первую оплату в разделе "Новая"</div>
