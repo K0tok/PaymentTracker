@@ -11,7 +11,7 @@
         </q-card-section>
 
         <q-card-section class="q-pt-md">
-          <q-form @submit.prevent="register" class="q-gutter-md">
+          <q-form @submit.prevent="register">
             <q-input
               v-model="email"
               type="email"

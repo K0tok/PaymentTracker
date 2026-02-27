@@ -8,9 +8,6 @@
         <q-toolbar-title class="text-weight-bold">
           Трекер платежей
         </q-toolbar-title>
-        <q-btn flat round dense icon="notifications" class="text-white">
-          <q-badge color="red" floating>{{ notificationsCount }}</q-badge>
-        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -35,7 +32,6 @@ import { store } from "./store.js";
 import router from "./router.js";
 
 const activeTab = ref("payment");
-const notificationsCount = ref(0);
 
 function logout() {
   store.logout();
