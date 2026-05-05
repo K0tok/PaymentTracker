@@ -1,287 +1,313 @@
 <template>
-  <q-page padding class="payment-page">
-    <div class="page-header q-mb-lg">
-      <div class="text-h4 text-weight-bold text-white">Новая оплата</div>
-      <div class="text-subtitle2 text-white opacity-80">Заполните данные о платеже</div>
-    </div>
-
-    <q-card class="payment-card">
-      <q-card-section class="q-pa-lg">
-        <q-form ref="paymentForm" @submit.prevent="submitPayment">
-          <SelectWithAdd
-            v-model="form.address_id"
-            :options="meta.addresses"
-            label="Адрес"
-            class="q-mb-md"
-            @add="addToMeta('addresses', $event)"
-          />
-
-          <SelectWithAdd
-            v-model="form.payment_type_id"
-            :options="meta.payment_types"
-            label="Тип оплаты"
-            class="q-mb-md"
-            @add="addToMeta('payment_types', $event)"
-          />
-
-          <SelectWithAdd
-            v-model="form.bank_id"
-            :options="meta.banks"
-            label="Банк"
-            class="q-mb-md"
-            @add="addToMeta('banks', $event)"
-          />
-
-          <q-input
-            v-model.number="form.amount"
-            type="number"
-            label="Сумма"
-            placeholder="0.00 ₽"
-            outlined
-            rounded
-            step="0.01"
-            min="0"
-            :rules="[val => !!val || 'Введите сумму']"
-            color="primary"
-          >
-            <template v-slot:prepend>
-              <q-icon name="attach_money" color="primary" />
-            </template>
-          </q-input>
-
-          <q-input
-            v-model="form.month_year"
-            type="month"
-            label="Период оплаты"
-            outlined
-            rounded
-            :rules="[val => !!val || 'Выберите период']"
-            color="primary"
-          >
-            <template v-slot:prepend>
-              <q-icon name="event_month" color="primary" />
-            </template>
-          </q-input>
-
-          <q-file
-            v-model="selectedFile"
-            label="Прикрепить файл (необязательно)"
-            class="q-mb-md"
-            outlined
-            rounded
-            accept=".pdf,.jpg,.jpeg,.png"
-            color="primary"
-          >
-            <template v-slot:prepend>
-              <q-icon name="attach_file" color="primary" />
-            </template>
-            <template v-slot:append>
-              <q-icon name="folder_open" color="grey-7" />
-            </template>
-          </q-file>
-
-          <q-btn
-            type="submit"
-            label="Сохранить оплату"
-            color="primary"
-            :loading="loading"
-            unelevated
-            rounded
-            class="full-width btn-submit q-py-sm"
-            size="lg"
-          >
-            <template v-slot:loading>
-              <q-spinner-dots size="28px" />
-            </template>
-          </q-btn>
-        </q-form>
-      </q-card-section>
-    </q-card>
-  </q-page>
+    <q-page
+        padding
+        class="payment-page"
+    >
+        <div class="page-header q-mb-lg">
+            <div class="text-h4 text-weight-bold text-white">Новая оплата</div>
+            <div class="text-subtitle2 text-white opacity-80">Заполните данные о платеже</div>
+        </div>
+        
+        <q-card class="payment-card">
+            <q-card-section class="q-pa-lg">
+                <q-form
+                    ref="paymentForm"
+                    @submit.prevent="submitPayment"
+                >
+                    <SelectWithAdd
+                        v-model="form.address_id"
+                        :options="meta.addresses"
+                        label="Адрес"
+                        :rules="[val => !!val || 'Выберите адрес']"
+                        @add="addToMeta('addresses', $event)"
+                    />
+                    
+                    <SelectWithAdd
+                        v-model="form.payment_type_id"
+                        :options="meta.payment_types"
+                        label="Тип оплаты"
+                        :rules="[val => !!val || 'Выберите тип оплаты']"
+                        @add="addToMeta('payment_types', $event)"
+                    />
+                    
+                    <SelectWithAdd
+                        v-model="form.bank_id"
+                        :options="meta.banks"
+                        label="Банк"
+                        :rules="[val => !!val || 'Выберите банк']"
+                        @add="addToMeta('banks', $event)"
+                    />
+                    
+                    <q-input
+                        v-model.number="form.amount"
+                        type="number"
+                        label="Сумма"
+                        placeholder="0.00 ₽"
+                        outlined
+                        rounded
+                        step="0.01"
+                        min="0"
+                        :rules="[val => !!val || 'Введите сумму']"
+                        color="primary"
+                    >
+                        <template v-slot:prepend>
+                            <q-icon
+                                name="attach_money"
+                                color="primary"
+                            />
+                        </template>
+                    </q-input>
+                    
+                    <q-input
+                        v-model="form.month_year"
+                        type="month"
+                        label="Период оплаты"
+                        outlined
+                        rounded
+                        :rules="[val => !!val || 'Выберите период']"
+                        color="primary"
+                    >
+                        <template v-slot:prepend>
+                            <q-icon
+                                name="event_month"
+                                color="primary"
+                            />
+                        </template>
+                    </q-input>
+                    
+                    <q-file
+                        v-model="selectedFile"
+                        label="Прикрепить файл (необязательно)"
+                        class="q-mb-md"
+                        outlined
+                        rounded
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        color="primary"
+                    >
+                        <template v-slot:prepend>
+                            <q-icon
+                                name="attach_file"
+                                color="primary"
+                            />
+                        </template>
+                        <template v-slot:append>
+                            <q-icon
+                                name="folder_open"
+                                color="grey-7"
+                            />
+                        </template>
+                    </q-file>
+                    
+                    <q-btn
+                        type="submit"
+                        label="Сохранить оплату"
+                        color="primary"
+                        :loading="loading"
+                        unelevated
+                        rounded
+                        class="full-width btn-submit q-py-sm"
+                        size="lg"
+                    >
+                        <template v-slot:loading>
+                            <q-spinner-dots size="28px"/>
+                        </template>
+                    </q-btn>
+                </q-form>
+            </q-card-section>
+        </q-card>
+    </q-page>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from "vue";
-import { useQuasar } from "quasar";
-import { store } from "../store.js";
-import SelectWithAdd from "../components/SelectWithAdd.vue";
-import "../assets/payment-form-styles.css";
+import {
+    ref,
+    reactive,
+    onMounted,
+} from 'vue';
+import { useQuasar } from 'quasar';
+import { store } from '../store.js';
+import SelectWithAdd from '../components/SelectWithAdd.vue';
+import '../assets/payment-form-styles.css';
 
 const $q = useQuasar();
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 const paymentForm = ref(null);
 
 const form = reactive({
-  address_id: null,
-  payment_type_id: null,
-  bank_id: null,
-  amount: null,
-  month_year: new Date().toISOString().slice(0, 7)
+    address_id:      null,
+    payment_type_id: null,
+    bank_id:         null,
+    amount:          null,
+    month_year:      new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().slice(0, 7),
 });
 
 const meta = reactive({
-  addresses: [],
-  payment_types: [],
-  banks: []
+    addresses:     [],
+    payment_types: [],
+    banks:         [],
 });
 
 const loading = ref(false);
 const selectedFile = ref(null);
 
 onMounted(async () => {
-  await loadMeta();
+    await loadMeta();
 });
 
 async function loadMeta() {
-  try {
-    const res = await fetch(`${API_URL}/user-meta`, {
-      headers: {
-        "Authorization": `Bearer ${store.token}`
-      }
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      meta.addresses = data.addresses || [];
-      meta.payment_types = data.payment_types || [];
-      meta.banks = data.banks || [];
-
-      if (data.last_address_id) {
-        form.address_id = data.last_address_id;
-      }
-      if (data.last_payment_type_id) {
-        form.payment_type_id = data.last_payment_type_id;
-      }
-      if (data.last_bank_id) {
-        form.bank_id = data.last_bank_id;
-      }
+    try {
+        const res = await fetch(`${ API_URL }/user-meta`, {
+            headers: {
+                'Authorization': `Bearer ${ store.token }`,
+            },
+        });
+        
+        if (res.ok) {
+            const data = await res.json();
+            meta.addresses = data.addresses || [];
+            meta.payment_types = data.payment_types || [];
+            meta.banks = data.banks || [];
+            
+            if (data.last_address_id) {
+                form.address_id = data.last_address_id;
+            }
+            if (data.last_payment_type_id) {
+                form.payment_type_id = data.last_payment_type_id;
+            }
+            if (data.last_bank_id) {
+                form.bank_id = data.last_bank_id;
+            }
+        }
     }
-  } catch (err) {
-    console.error("Ошибка загрузки мета-данных:", err);
-  }
+    catch (err) {
+        console.error('Ошибка загрузки мета-данных:', err);
+    }
 }
 
 async function addToMeta(field, value) {
-  try {
-    const res = await fetch(`${API_URL}/user-meta/${field}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${store.token}`
-      },
-      body: JSON.stringify({ value })
-    });
-
-    if (res.ok) {
-      const newData = await res.json();
-      const newItem = { id: newData.id, value: newData.value };
-      if (!meta[field].find(item => item.value === value)) {
-        meta[field].push(newItem);
-      }
+    try {
+        const res = await fetch(`${ API_URL }/user-meta/${ field }`, {
+            method:  'POST',
+            headers: {
+                'Content-Type':  'application/json',
+                'Authorization': `Bearer ${ store.token }`,
+            },
+            body:    JSON.stringify({ value }),
+        });
+        
+        if (res.ok) {
+            const newData = await res.json();
+            const newItem = { id: newData.id, value: newData.value };
+            if (!meta[field].find(item => item.value === value)) {
+                meta[field].push(newItem);
+            }
+        }
     }
-  } catch (err) {
-    console.error("Ошибка добавления в мета-данные:", err);
-  }
+    catch (err) {
+        console.error('Ошибка добавления в мета-данные:', err);
+    }
 }
 
 async function submitPayment() {
-  if (!form.address_id || !form.payment_type_id || !form.bank_id || form.amount === null || form.amount === '' || !form.month_year) {
-    $q.notify({
-      type: "warning",
-      message: "Все поля обязательны",
-      position: "top",
-      actions: [{ icon: 'close', color: 'white' }]
-    });
-    return;
-  }
-
-  loading.value = true;
-
-  try {
-    let file_url = null;
-
-    if (selectedFile.value) {
-      // Читаем файл как base64
-      const base64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(selectedFile.value);
-      });
-
-      const uploadRes = await fetch(`${API_URL}/payments/upload`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${store.token}`
-        },
-        body: JSON.stringify({
-          file: base64,
-          filename: selectedFile.value.name,
-          type: selectedFile.value.type
-        })
-      });
-
-      if (uploadRes.ok) {
-        const uploadData = await uploadRes.json();
-        file_url = uploadData.file_url;
-      } else {
-        const errorData = await uploadRes.json();
-        throw new Error(errorData.message || "Ошибка загрузки файла");
-      }
+    if (!form.address_id || !form.payment_type_id || !form.bank_id || form.amount === null || form.amount === '' || !form.month_year) {
+        $q.notify({
+            type:     'warning',
+            message:  'Все поля обязательны',
+            position: 'top',
+            actions:  [ { icon: 'close', color: 'white' } ],
+        });
+        return;
     }
-
-    const address = meta.addresses.find(a => a.id === form.address_id)?.value || "";
-    const payment_type = meta.payment_types.find(p => p.id === form.payment_type_id)?.value || "";
-    const bank = meta.banks.find(b => b.id === form.bank_id)?.value || "";
-
-    const res = await fetch(`${API_URL}/payments`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${store.token}`
-      },
-      body: JSON.stringify({
-        address,
-        payment_type,
-        bank,
-        amount: form.amount,
-        month_year: form.month_year,
-        file_url
-      })
-    });
-
-    if (!res.ok) {
-      const data = await res.json();
-      throw new Error(data.message || "Ошибка сохранения");
+    
+    loading.value = true;
+    
+    try {
+        let file_url = null;
+        
+        if (selectedFile.value) {
+            const base64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(selectedFile.value);
+            });
+            
+            const uploadRes = await fetch(`${ API_URL }/payments/upload`, {
+                method:  'POST',
+                headers: {
+                    'Content-Type':  'application/json',
+                    'Authorization': `Bearer ${ store.token }`,
+                },
+                body:    JSON.stringify({
+                    file:     base64,
+                    filename: selectedFile.value.name,
+                    type:     selectedFile.value.type,
+                }),
+            });
+            
+            if (uploadRes.ok) {
+                const uploadData = await uploadRes.json();
+                file_url = uploadData.file_url;
+            }
+            else {
+                const errorData = await uploadRes.json();
+                throw new Error(errorData.message || 'Ошибка загрузки файла');
+            }
+        }
+        
+        const address = meta.addresses.find(a => a.id === form.address_id)?.value || '';
+        const payment_type = meta.payment_types.find(p => p.id === form.payment_type_id)?.value || '';
+        const bank = meta.banks.find(b => b.id === form.bank_id)?.value || '';
+        
+        const res = await fetch(`${ API_URL }/payments`, {
+            method:  'POST',
+            headers: {
+                'Content-Type':  'application/json',
+                'Authorization': `Bearer ${ store.token }`,
+            },
+            body:    JSON.stringify({
+                address,
+                payment_type,
+                bank,
+                amount:     form.amount,
+                month_year: form.month_year,
+                file_url,
+            }),
+        });
+        
+        if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.message || 'Ошибка сохранения');
+        }
+        
+        $q.notify({
+            type:     'positive',
+            message:  'Оплата успешно сохранена!',
+            position: 'top',
+            actions:  [ { icon: 'close', color: 'white' } ],
+        });
+        
+        form.address_id = null;
+        form.payment_type_id = null;
+        form.bank_id = null;
+        form.amount = null;
+        form.month_year = new Date().toISOString().slice(0, 7);
+        selectedFile.value = null;
+        
+        await loadMeta();
+        paymentForm.value?.resetValidation();
     }
-
-    $q.notify({
-      type: "positive",
-      message: "Оплата успешно сохранена!",
-      position: "top",
-      actions: [{ icon: 'close', color: 'white' }]
-    });
-
-    form.address_id = null;
-    form.payment_type_id = null;
-    form.bank_id = null;
-    form.amount = null;
-    form.month_year = new Date().toISOString().slice(0, 7);
-    selectedFile.value = null;
-
-    await loadMeta();
-    paymentForm.value?.resetValidation();
-  } catch (err) {
-    $q.notify({
-      type: "negative",
-      message: err.message,
-      position: "top",
-      actions: [{ icon: 'close', color: 'white' }]
-    });
-  } finally {
-    loading.value = false;
-  }
+    catch (err) {
+        $q.notify({
+            type:     'negative',
+            message:  err.message,
+            position: 'top',
+            actions:  [ { icon: 'close', color: 'white' } ],
+        });
+    }
+    finally {
+        loading.value = false;
+    }
 }
 </script>
