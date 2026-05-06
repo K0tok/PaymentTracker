@@ -12,7 +12,8 @@ dist/
 build/
 
 # Загруженные файлы
-uploads/
+!uploads/.gitkeep
+uploads/*
 *.log
 
 # ОС
